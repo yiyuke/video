@@ -9,23 +9,24 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const formData = new FormData(this);
             
-            fetch('process_video_url.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Video added successfully!');
-                    location.reload();
-                } else {
-                    alert('Failed to add video: ' + data.message);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'process_video_url.php');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.success) {
+                        alert('Video added successfully!');
+                        location.reload();
+                    } else {
+                        alert('Failed to add video: ' + data.message);
+                    }
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to add video: ' + error.message);
-            });
+            };
+            xhr.onerror = function() {
+                console.error('Error:', xhr.statusText);
+                alert('Failed to add video');
+            };
+            xhr.send(formData);
         });
     }
 
@@ -79,52 +80,56 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function updateTitle(videoId, newTitle, titleElement, inputElement) {
-        fetch('update_video.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `video_id=${videoId}&title=${encodeURIComponent(newTitle)}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                titleElement.textContent = newTitle;
-                titleElement.style.display = 'block';
-                inputElement.style.display = 'none';
-            } else {
-                alert('Failed to update title: ' + data.message);
-                inputElement.value = titleElement.textContent;
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'update_video.php');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                if (data.success) {
+                    titleElement.textContent = newTitle;
+                    titleElement.style.display = 'block';
+                    inputElement.style.display = 'none';
+                } else {
+                    alert('Failed to update title: ' + data.message);
+                    inputElement.value = titleElement.textContent;
+                }
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+        };
+        
+        xhr.onerror = function() {
+            console.error('Error:', xhr.statusText);
             alert('Failed to update title');
             inputElement.value = titleElement.textContent;
-        });
+        };
+        
+        xhr.send(`video_id=${videoId}&title=${encodeURIComponent(newTitle)}`);
     }
 
     function deleteVideo(videoId, videoElement) {
-        fetch('delete_video.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `video_id=${videoId}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                videoElement.remove();
-                deleteModal.style.display = 'none';
-                videoToDelete = null;
-            } else {
-                alert('Failed to delete video: ' + data.message);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'delete_video.php');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                if (data.success) {
+                    videoElement.remove();
+                    deleteModal.style.display = 'none';
+                    videoToDelete = null;
+                } else {
+                    alert('Failed to delete video: ' + data.message);
+                }
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+        };
+        
+        xhr.onerror = function() {
+            console.error('Error:', xhr.statusText);
             alert('Failed to delete video');
-        });
+        };
+        
+        xhr.send(`video_id=${videoId}`);
     }
 }); 

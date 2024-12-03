@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const profileImage = document.getElementById('profileImage');
     const profilePreview = document.getElementById('profilePreview');
 
-    // 預覽選擇的圖片
+    //review the picture
     profileImage.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
@@ -15,35 +15,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 處理表單提交
+    // deal with the form
     profileForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         const formData = new FormData(this);
-        fetch('update_profile.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Profile updated successfully!');
-                // 使用服務器返回的圖片路徑更新所有頭像
-                const newImagePath = data.profile_image;
-                document.querySelectorAll('.profile-img, .nav-user-info img').forEach(img => {
-                    img.src = newImagePath;
-                });
-                // 更新用戶名
-                document.querySelectorAll('.user-info span').forEach(span => {
-                    span.textContent = formData.get('username');
-                });
-            } else {
-                alert('Update failed: ' + data.message);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'update_profile.php');
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                if (data.success) {
+                    alert('Profile updated successfully!');
+                    // update all the profile images
+                    const newImagePath = data.profile_image;
+                    document.querySelectorAll('.profile-img, .nav-user-info img').forEach(img => {
+                        img.src = newImagePath;
+                    });
+                    // update the username
+                    document.querySelectorAll('.user-info span').forEach(span => {
+                        span.textContent = formData.get('username');
+                    });
+                } else {
+                    alert('Update failed: ' + data.message);
+                }
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+        };
+
+        xhr.onerror = function() {
+            console.error('Error:', xhr.statusText);
             alert('Update failed');
-        });
+        };
+
+        xhr.send(formData);
     });
 }); 
