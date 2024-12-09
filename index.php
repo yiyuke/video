@@ -95,7 +95,7 @@ require_once 'config/database.php';
         <!-- Open Source Section -->
         <section class="open-source">
             <h2>And, we keep it open source.</h2>
-            <p>VideoLingo got 7k⭐ in 3 months</p>
+            <p>VideoLingo got 8k⭐ in 4 months</p>
             <a href="https://github.com/Huanshere/VideoLingo" class="github-btn">
                 <img src="images/github.png" alt="GitHub">
                 Check us on Github
