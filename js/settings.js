@@ -25,21 +25,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
         xhr.onload = function() {
             if (xhr.status === 200) {
-                const data = JSON.parse(xhr.responseText);
-                if (data.success) {
-                    alert('Profile updated successfully!');
-                    // update all the profile images
-                    const newImagePath = data.profile_image;
-                    document.querySelectorAll('.profile-img, .nav-user-info img').forEach(img => {
-                        img.src = newImagePath;
-                    });
-                    // update the username
-                    document.querySelectorAll('.user-info span').forEach(span => {
-                        span.textContent = formData.get('username');
-                    });
-                } else {
-                    alert('Update failed: ' + data.message);
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.success) {
+                        alert('Profile updated successfully!');
+                        // update all the profile images
+                        if (data.profile_image) {
+                            const newImagePath = data.profile_image;
+                            document.querySelectorAll('.profile-img, .nav-user-info img').forEach(img => {
+                                img.src = newImagePath;
+                            });
+                        }
+                        // update the username
+                        document.querySelectorAll('.user-info span').forEach(span => {
+                            span.textContent = formData.get('username');
+                        });
+                    } else {
+                        alert('Update failed: ' + (data.message || 'Unknown error'));
+                    }
+                } catch (e) {
+                    console.error('JSON parsing error:', e);
+                    console.log('Raw response:', xhr.responseText);
+                    alert('Error processing server response');
                 }
+            } else {
+                alert('Server error: ' + xhr.status);
             }
         };
 

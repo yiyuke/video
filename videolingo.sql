@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 09, 2024 at 03:48 PM
+-- Generation Time: Dec 10, 2024 at 06:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `profile_image`, `created_at`) VALUES
-(1, 'yuke', '12345@gmail.com', '$2y$10$4.XfLQpN6YcTtKbdia0hle6GDVhyRm1am5SGmjKdPE/b8CqSKVApy', 'uploads/profiles/674f17e241345_personal-portrait.png', '2024-11-24 23:36:17');
+(1, 'yuke', '12345@gmail.com', '$2y$10$4.XfLQpN6YcTtKbdia0hle6GDVhyRm1am5SGmjKdPE/b8CqSKVApy', 'uploads/profiles/675875bceb85b_6743bf4be3d28_yuke.jpg', '2024-11-24 23:36:17');
 
 -- --------------------------------------------------------
 
@@ -100,7 +100,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `videos`
 --
 ALTER TABLE `videos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
